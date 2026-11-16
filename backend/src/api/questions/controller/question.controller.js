@@ -1,9 +1,8 @@
-import { StatusCodes, statusCodes } from 'http-status-codes';
-
-import { createQuestionService, listQuestionsService } from '../service/question.service.js'
-import { safeEncode } from './../../../../../frontend/node_modules/zod/v4/classic/parse';
-import { NotFoundError } from '../../../utils/errors/index.js';
-import { safeExecute } from '../../../../db/config.js';
+import { StatusCodes } from 'http-status-codes';
+import {
+  createQuestionService,
+  listQuestionsService,
+} from '../service/question.service.js';
 
 
 export const createQuestionController = async (req, res, next) => {
@@ -11,21 +10,17 @@ export const createQuestionController = async (req, res, next) => {
         const question = await createQuestionService({
             userId: req.user.id,
             title: req.body.title,
-            body: req.body.body
+            content: req.body.content,
         });
-        res.status(statusCodes.CREATED).json(
-            {
-                success: true,
-                message: 'Question posted successfully.',
-                question
-            }
-        );
-
-
+        res.status(StatusCodes.CREATED).json({
+            success: true,
+            message: 'Question posted successfully.',
+            data: question,
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
 
 export const listQuestionsController = async (req, res, next) => {
     try {
