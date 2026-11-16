@@ -11,7 +11,7 @@
  *   should use them; otherwise keep styles local to the page module.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
   /* Primary colors (Orange-based) */
@@ -64,12 +64,12 @@
 
   /* Shadow values */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-focus: 0 0 0 3px rgba(249, 115, 22, 0.2);
 
   /* Border radius */
@@ -89,8 +89,9 @@
   --spacing-3xl: 4rem;
 
   /* Font stack */
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 
   /* Font sizes */
   --text-xs: 0.75rem;
@@ -192,7 +193,8 @@ select:focus {
   outline: none;
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 1px var(--primary) !important;
-  transition: border-color var(--transition-fast),
+  transition:
+    border-color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
@@ -225,4 +227,155 @@ h5 {
 }
 h6 {
   font-size: var(--text-base);
+}
+
+/* =============================================================================
+ * ADDED: tokens + utility classes used by Dashboard and QuestionList.
+ * Each short name points at the team's existing tokens above where one exists,
+ * so the colors stay consistent with the rest of the app.
+ * ========================================================================== */
+:root {
+  --orange: var(--primary);
+  --orange-dark: var(--primary-hover);
+  --orange-deep: var(--primary-dark);
+  --orange-soft: #fff7ed;
+  --orange-ring: rgba(249, 115, 22, 0.3);
+  --ink: #111827;
+  --ink-2: var(--text-secondary);
+  --muted: #6b7280;
+  --faint: var(--text-placeholder);
+  --line: #e5e7eb;
+  --panel: var(--surface-container-low);
+  --panel-2: var(--surface-hover);
+  --bg: var(--background);
+  --white: var(--surface);
+  --red: #dc2626;
+  --red-soft: #fef2f2;
+  --red-line: #fecaca;
+  --green: #16a34a;
+  --green-soft: #f0fdf4;
+  --green-line: #bbf7d0;
+  --amber: #b45309;
+  --amber-soft: var(--warning-light);
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange-deep);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.btn-primary,
+.btn-primary:hover {
+  color: #fff;
+}
+.btn-primary {
+  background: var(--orange);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--orange-dark);
+}
+.btn-soft {
+  color: var(--ink-2);
+  background: var(--panel-2);
+  border-color: var(--line);
+}
+.btn-soft:hover:not(:disabled) {
+  background: var(--panel);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+.badge-orange {
+  color: var(--orange-deep);
+  background: #ffedd5;
+}
+.badge-solid {
+  color: #fff;
+  background: var(--orange);
+  height: 24px;
+  padding: 0 10px;
+}
+
+.empty-box {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ink-2);
+  background: var(--panel);
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius);
+}
+.empty-box h3 {
+  margin: 12px 0 6px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.empty-box p {
+  margin: 0 auto;
+  max-width: 560px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.empty-box .btn {
+  margin-top: 18px;
+}
+
+.skeleton {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eef2f6 25%, #e2e8f0 37%, #eef2f6 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }

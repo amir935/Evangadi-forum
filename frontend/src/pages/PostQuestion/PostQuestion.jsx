@@ -115,7 +115,7 @@ export default function PostQuestion() {
               className={styles.postQuestion__submit}
               type='button'
               onClick={() =>
-                navigate(`/question/${postedQuestion.questionHash}`)
+                navigate(`/questions/${postedQuestion.questionHash}`)
               }
             >
               View Question
@@ -142,9 +142,8 @@ export default function PostQuestion() {
             </span>
             <input
               id='question-title'
-              className={`${styles.postQuestion__input} ${
-                fieldErrors.title ? styles['postQuestion__input--invalid'] : ''
-              }`}
+              className={`${styles.postQuestion__input} ${fieldErrors.title ? styles['postQuestion__input--invalid'] : ''
+                }`}
               name='title'
               type='text'
               value={formData.title}
@@ -182,11 +181,10 @@ export default function PostQuestion() {
             </span>
             <textarea
               id='question-content'
-              className={`${styles.postQuestion__textarea} ${
-                fieldErrors.content
-                  ? styles['postQuestion__textarea--invalid']
-                  : ''
-              }`}
+              className={`${styles.postQuestion__textarea} ${fieldErrors.content
+                ? styles['postQuestion__textarea--invalid']
+                : ''
+                }`}
               name='content'
               value={formData.content}
               onChange={handleChange}
