@@ -7,8 +7,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. Users Table
 -- Stores user account information.
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
     `user_id` INT AUTO_INCREMENT PRIMARY KEY,
     `first_name` VARCHAR(50) NOT NULL,
     `last_name` VARCHAR(50) NOT NULL,
@@ -26,8 +25,7 @@ CREATE TABLE `users` (
 -- Stores the main questions posted by users.
 -- Supports full-text search on title and content for exact match search.
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `questions`;
-CREATE TABLE `questions` (
+CREATE TABLE IF NOT EXISTS `questions` (
     `question_id` INT AUTO_INCREMENT PRIMARY KEY,
     `question_hash` CHAR(16) NOT NULL UNIQUE, -- Used for /question/:hash routing
     `user_id` INT NOT NULL,
@@ -51,8 +49,7 @@ CREATE TABLE `questions` (
 -- 3. Question Vectors Table
 -- Stores embeddings for the AI Semantic Search feature (Gemini default model).
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `question_vectors`;
-CREATE TABLE `question_vectors` (
+CREATE TABLE IF NOT EXISTS `question_vectors` (
     `vector_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `question_id` INT NOT NULL,
     `source_text` TEXT NOT NULL, -- Text used to generate the embedding
@@ -68,8 +65,7 @@ CREATE TABLE `question_vectors` (
 -- 4. Answers Table
 -- Stores answers to questions.
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `answers`;
-CREATE TABLE `answers` (
+CREATE TABLE IF NOT EXISTS `answers` (
     `answer_id` INT AUTO_INCREMENT PRIMARY KEY,
     `question_id` INT NOT NULL,
     `user_id` INT NOT NULL,
@@ -88,8 +84,7 @@ CREATE TABLE `answers` (
 -- -----------------------------------------------------------------------------
 -- 5. RAG: user-owned PDF documents, text chunks, and chunk embeddings
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `documents`;
-CREATE TABLE `documents` (
+CREATE TABLE IF NOT EXISTS `documents` (
     `document_id` INT AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
     `title` VARCHAR(512) NOT NULL,
@@ -104,8 +99,7 @@ CREATE TABLE `documents` (
     INDEX `idx_documents_user_created` (`user_id`, `created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `document_chunks`;
-CREATE TABLE `document_chunks` (
+CREATE TABLE IF NOT EXISTS `document_chunks` (
     `chunk_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `document_id` INT NOT NULL,
     `chunk_index` INT NOT NULL,
@@ -118,8 +112,7 @@ CREATE TABLE `document_chunks` (
     INDEX `idx_document_chunks_document_id` (`document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `document_chunk_vectors`;
-CREATE TABLE `document_chunk_vectors` (
+CREATE TABLE IF NOT EXISTS `document_chunk_vectors` (
     `chunk_vector_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `chunk_id` BIGINT NOT NULL,
     `source_text` TEXT NOT NULL,
