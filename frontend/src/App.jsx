@@ -10,6 +10,7 @@ import Layout from "./components/Layout/Layout";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import PostQuestion from "./pages/PostQuestion/PostQuestion";
 import Landing from "./pages/Landing/Landing";
 import MyQuestions from "./components/my-questions/MyQuestions";
 

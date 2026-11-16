@@ -13,6 +13,8 @@ if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');
 }
 
+
+
 const normalizeEmail = email => email.trim().toLowerCase();
 
 /**

@@ -5,9 +5,9 @@ import mysql from "mysql2/promise";
 // Database connection pool
 export const db = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "forum-admin",
-  password: process.env.DB_PASS || "",
-  database: process.env.DB_NAME || "ai-forum",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "root",
+  database: process.env.DB_NAME || "evangadi_forum",
 });
 const ensureParams = (params) => {
   if (params === undefined || params === null) {

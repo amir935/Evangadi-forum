@@ -1,0 +1,195 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero {
+  padding: 36px 32px 32px;
+}
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+}
+
+.greeting {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.intro {
+  margin: 14px 0 0;
+  max-width: 640px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.shortcut {
+  display: flex;
+  gap: 14px;
+
+  padding: 18px 22px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.shortcut:hover {
+  border-color: #fdba74;
+  background: var(--orange-soft);
+}
+
+.shortcutsIcon {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--orange);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.shortcutTitle {
+  display: flex;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.shortcutText {
+  display: flex;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.rule {
+  margin: 28px 0 22px;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.note {
+  margin: 0 0 14px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.states {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  display: grid;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 500;
+}
+.feed {
+  overflow: hidden;
+}
+.feedHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 32px;
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border-bottom: 1px solid var(--line);
+}
+
+.feedTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.feedSub {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.toggle {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+  border: 0;
+
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.toggle .toggleOn {
+  color: #fff;
+  background-color: var(--orange);
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  cursor: pointer;
+}
+.clear:hover {
+  color: var(--orange-dark);
+  border-color: #fdba74;
+}

@@ -9,12 +9,12 @@ export const createQuestionController = async (req, res, next) => {
         const question = await createQuestionService({
             userId: req.user.id,
             title: req.body.title,
-            body: req.body.body,
+            body: req.body.content,
         });
         res.status(StatusCodes.CREATED).json({
             success: true,
             message: 'Question posted successfully.',
-            question,
+            data: question,
         });
     } catch (error) {
         next(error);
