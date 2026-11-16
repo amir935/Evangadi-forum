@@ -1,21 +1,20 @@
 import { StatusCodes } from 'http-status-codes';
 import {
-  createQuestionService,
-  listQuestionsService,
+    createQuestionService,
+    listQuestionsService,
 } from '../service/question.service.js';
-
 
 export const createQuestionController = async (req, res, next) => {
     try {
         const question = await createQuestionService({
             userId: req.user.id,
             title: req.body.title,
-            content: req.body.content,
+            body: req.body.body,
         });
         res.status(StatusCodes.CREATED).json({
             success: true,
             message: 'Question posted successfully.',
-            data: question,
+            question,
         });
     } catch (error) {
         next(error);
