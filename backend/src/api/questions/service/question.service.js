@@ -1,23 +1,26 @@
 import crypto from 'node:crypto';
+import { GoogleGenAI } from '@google/genai';
 import { safeExecute } from '../../../../db/config.js';
-import { NotFoundError, BadRequestError } from '../../../utils/errors/index.js';
 
 const QUESTION_SELECT = `
-    SELECT q.question_id, q.question_hash, q.user_id, q.title, q.body, q.created_at,
-           u.first_name, u.last_name,
-            (SELECT COUNT(*) FROM answers a WHERE a.question_id = q.question_id) AS answer_count
+    SELECT q.question_id, q.question_hash, q.user_id, q.title, q.content,
+           q.created_at, q.updated_at, u.first_name, u.last_name,
+           (SELECT COUNT(*) FROM answers a WHERE a.question_id = q.question_id) AS answer_count
     FROM questions q
-    JOIN users u ON u.user_id = q.user_id`
+    JOIN users u ON u.user_id = q.user_id`;
 
 
 const toQuestion = (row, currentUserId) => (
     {
+        id: row.question_id,
         questionHash: row.question_hash,
         title: row.title,
-        body: row.body,
+        content: row.content,
         createdAt: row.created_at,
+        updatedAt: row.updated_at,
         answerCount: Number(row.answer_count ?? 0),
         isMine: row.user_id === currentUserId,
+        userId: row.user_id,
         author: {
             id: row.user_id,
             firstName: row.first_name,
@@ -28,26 +31,59 @@ const toQuestion = (row, currentUserId) => (
 
 const newQuestionHash = () => crypto.randomBytes(8).toString('hex');
 
-async function createQuestionService({ userId, title, body }) {
+async function createQuestionEmbedding(sourceText) {
+    if (!process.env.GEMINI_API_KEY) {
+        throw new Error('GEMINI_API_KEY is not configured');
+    }
+
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.embedContent({
+        model: process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-001',
+        contents: sourceText,
+        config: { taskType: 'RETRIEVAL_DOCUMENT' },
+    });
+    const embedding = response.embeddings?.[0]?.values;
+
+    if (!embedding?.length) {
+        throw new Error('Gemini returned an empty question embedding');
+    }
+
+    return embedding;
+}
+
+async function createQuestionService({ userId, title, content }) {
     const cleanTitle = title.trim();
-    const cleanBody = body.trim();
+    const cleanContent = content.trim();
     const questionHash = newQuestionHash();
 
-    // Generate an embedding for the question content.
-    let embedding = null;
-    let embeddingModel = null;
+    const result = await safeExecute(
+        `INSERT INTO questions (question_hash, user_id, title, content)
+         VALUES (?, ?, ?, ?)`,
+        [questionHash, userId, cleanTitle, cleanContent],
+    );
 
+    let embedding = [];
+    let status = 'ready';
+    const sourceText = cleanTitle;
+
+    try {
+        embedding = await createQuestionEmbedding(sourceText);
+    } catch (error) {
+        status = 'failed';
+        console.error('Unable to generate question embedding:', error.message);
+    }
 
     await safeExecute(
-        `INSERT INTO questions (question_hash, user_id, title, body, embedding, embedding_model)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [questionHash, userId, cleanTitle, cleanBody, embedding, embeddingModel],
-    )
+        `INSERT INTO question_vectors (question_id, source_text, embedding, status)
+         VALUES (?, ?, ?, ?)`,
+        [result.insertId, sourceText, JSON.stringify(embedding), status],
+    );
 
-    const rows = await safeExecute(`${QUESTION_SELECT} WHERE q.question_hash = ?`, [questionHash]);
+    const rows = await safeExecute(
+        `${QUESTION_SELECT} WHERE q.question_id = ?`,
+        [result.insertId],
+    );
     return toQuestion(rows[0], userId);
-
-
 }
 
 function clampLimit(value, fallback, max) {
@@ -67,9 +103,11 @@ async function listQuestionsService({ userId, search, mine, limit }) {
 
     if (mine) {
         where.push('q.user_id = ?');
+        params.push(userId);
     }
     if (search) {
-        where.push('q.title LIKE ? OR q.body LIKE ?');
+        where.push('(q.title LIKE ? OR q.content LIKE ?)');
+        params.push(`%${search}%`, `%${search}%`);
     }
 
     const sql =
@@ -82,4 +120,4 @@ async function listQuestionsService({ userId, search, mine, limit }) {
     return rows.map(row => toQuestion(row, userId));
 }
 
-export { createQuestionService, clampLimit };
+export { createQuestionService, listQuestionsService, clampLimit };
