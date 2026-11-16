@@ -3,6 +3,7 @@
  * Add new `<Route>` entries here, then wire navigation in `Sidebar.jsx` and
  * `Layout.jsx` (`getTitle` / `getSubtitle`) so the shell stays in sync.
  */
+
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
@@ -11,6 +12,8 @@ import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Landing from "./pages/Landing/Landing";
 import MyQuestions from "./components/my-questions/MyQuestions";
+
+
 
 function App() {
   return (
@@ -33,7 +36,7 @@ function App() {
           path="/questions/ask"
           element={
             <ProtectedRoute>
-              <h1>Ask a Question Page</h1>
+              <PostQuestion />
             </ProtectedRoute>
           }
         />
