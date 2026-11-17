@@ -2,7 +2,10 @@ import { StatusCodes } from 'http-status-codes';
 import {
     createQuestionService,
     listQuestionsService,
+    getSingleQuestionService,
+    getSimilarQuestionsService,
 } from '../service/question.service.js';
+import { assessAnswerAgainstQuestionService } from '../service/geminiTextCoach.service.js';
 
 export const createQuestionController = async (req, res, next) => {
     try {
@@ -34,3 +37,60 @@ export const listQuestionsController = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getSingleQuestionController = async (req, res, next) => {
+    try {
+        const { questionHash } = req.params;
+        const result = await getSingleQuestionService({
+            questionHash,
+            currentUserId: req.user.id,
+        });
+        res.status(StatusCodes.OK).json({
+            success: true,
+            message: 'Question fetched successfully',
+            ...result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const assessAnswerFitController = async (req, res, next) => {
+    try {
+        const { questionHash } = req.params;
+        const { answerText } = req.body;
+        const data = await assessAnswerAgainstQuestionService({
+            questionHash,
+            answerText,
+        });
+        res.status(StatusCodes.OK).json({
+            success: true,
+            message: 'Answer fit assessed',
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getSimilarQuestionsController = async (req, res, next) => {
+    try {
+        const { questionHash } = req.params;
+        const k = req.query.k ? parseInt(req.query.k, 10) : 5;
+        const threshold = req.query.threshold ? parseFloat(req.query.threshold) : 0.75;
+        const result = await getSimilarQuestionsService({
+            questionHash,
+            k,
+            threshold,
+            currentUserId: req.user.id,
+        });
+        res.status(StatusCodes.OK).json({
+            success: true,
+            message: 'Similar questions fetched successfully',
+            ...result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
