@@ -4,6 +4,8 @@ import {
     listQuestionsService,
     getSingleQuestionService,
     getSimilarQuestionsService,
+    updateQuestionService,
+    deleteQuestionService,
 } from '../service/question.service.js';
 import { assessAnswerAgainstQuestionService } from '../service/geminiTextCoach.service.js';
 
@@ -94,3 +96,29 @@ export const getSimilarQuestionsController = async (req, res, next) => {
     }
 };
 
+
+export const updateQuestionController = async (req, res, next) => {
+    try {
+        const question = await updateQuestionService({
+            userId: req.user.id,
+            questionHash: req.params.questionHash,
+            title: req.body.title,
+            body: req.body.body,
+        });
+
+        res.status(StatusCodes.OK).json({
+            success: true, message: 'Question updated.', question
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteQuestionController = async (req, res, next) => {
+    try {
+        await deleteQuestionService({ userId: req.user.id, questionHash: req.params.questionHash });
+        res.status(StatusCodes.OK).json({ success: true, message: 'Question deleted.' });
+    } catch (error) {
+        next(error);
+    }
+};

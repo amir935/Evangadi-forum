@@ -60,4 +60,30 @@ export async function createAnswerService({ questionId, content, userId }) {
       lastName: row.last_name,
     },
   };
-}
+};
+
+const findOwnedAnswer = async (answerId, userId) => {
+  const [row] = await safeExecute('SELECT answer_id, user_id FROM answers WHERE answer_id = ? LIMIT 1', [answerId]);
+  if (!row) throw new NotFoundError('Answer not found.');
+  if (row.user_id !== userId) throw new ForbiddenError('You can only change your own answer.');
+  return row;
+};
+
+export const updateAnswerService = async ({ userId, answerId, answerBody }) => {
+  await findOwnedAnswer(answerId, userId);
+  await safeExecute('UPDATE answers SET content = ? WHERE answer_id = ?', [answerBody.trim(), answerId]);
+  const [a] = await safeExecute(
+    `SELECT a.answer_id, a.user_id, a.content, a.created_at, u.first_name, u.last_name
+         FROM answers a JOIN users u ON u.user_id = a.user_id WHERE a.answer_id = ?`,
+    [answerId],
+  );
+  return {
+    id: a.answer_id, body: a.content, createdAt: a.created_at, isMine: true,
+    author: { id: a.user_id, firstName: a.first_name, lastName: a.last_name },
+  };
+};
+
+export const deleteAnswerService = async ({ userId, answerId }) => {
+  await findOwnedAnswer(answerId, userId);
+  await safeExecute('DELETE FROM answers WHERE answer_id = ?', [answerId]);
+};

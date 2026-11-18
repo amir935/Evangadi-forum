@@ -1,9 +1,11 @@
 import express from 'express';
-import { createAnswerController } from '../controller/answer.controller.js';
-import { createAnswerValidation } from '../validations/answer.validation.js';
+import { createAnswerController, deleteAnswerController, updateAnswerController } from '../controller/answer.controller.js';
+import { createAnswerValidation, deleteAnswerValidation, updateAnswerValidation } from '../validations/answer.validation.js';
 
 const router = express.Router();
 
 router.post('/', createAnswerValidation, createAnswerController);
+router.patch('/:answerId', updateAnswerValidation, updateAnswerController);
+router.delete('/:answerId', deleteAnswerValidation, deleteAnswerController);
 
 export default router;

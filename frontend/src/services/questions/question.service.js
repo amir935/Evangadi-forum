@@ -52,3 +52,26 @@ export async function getSimilarQuestions(questionHash) {
   }
 }
 
+
+// ---------- edit / delete (owner only; backend answers 403 for anyone else) ----------
+const errorMessage = (error, fallback) =>
+  error.response?.data?.msg || error.response?.data?.message || fallback;
+
+/** PATCH /api/questions/:questionHash  body: { title, body } → the updated question */
+export async function updateQuestion(questionHash, { title, body }) {
+  try {
+    const response = await apiClient.patch(`/api/questions/${questionHash}`, { title, body });
+    return response.data.question;
+  } catch (error) {
+    throw new Error(errorMessage(error, 'Could not save your question.'));
+  }
+}
+
+/** DELETE /api/questions/:questionHash (its answers are removed too) */
+export async function deleteQuestion(questionHash) {
+  try {
+    await apiClient.delete(`/api/questions/${questionHash}`);
+  } catch (error) {
+    throw new Error(errorMessage(error, 'Could not delete your question.'));
+  }
+}

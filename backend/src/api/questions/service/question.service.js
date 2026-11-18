@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { safeExecute } from '../../../../db/config.js';
-import { NotFoundError } from '../../../utils/errors/index.js';
+import { ForbiddenError, NotFoundError } from '../../../utils/errors/index.js';
 
 const QUESTION_SELECT = `
     SELECT q.question_id, q.question_hash, q.user_id, q.title, q.content, q.created_at, q.updated_at,
@@ -273,10 +273,55 @@ async function getSimilarQuestionsService({ questionHash, k = 5, threshold = 0.7
     };
 }
 
+
+async function findOwnedQuestion(questionHash, userId) {
+    const [row] = await safeExecute(
+        'SELECT question_id, user_id FROM questions WHERE question_hash = ? LIMIT 1',
+        [questionHash],
+    );
+
+    if (!row) throw new NotFoundError("Question not found.");
+    if (row.user_id !== userId) throw new ForbiddenError('You can only change your own question.');
+
+    return row;
+
+
+}
+
+async function updateQuestionService({ userId, questionHash, title, body }) {
+    await findOwnedQuestion(questionHash, userId);
+
+    await safeExecute(
+        'UPDATE questions SET title = ?, content = ? WHERE question_hash = ?', // DB column is `content`
+        [title.trim(), body.trim(), questionHash],
+    );
+
+    const rows = await safeExecute(
+        `${QUESTION_SELECT} WHERE q.question_hash = ?`, [questionHash]
+    );
+
+    return toQuestion(rows[0], userId);
+
+
+
+
+
+
+}
+
+async function deleteQuestionService({ userId, questionHash }) {
+    const row = await findOwnedQuestion(questionHash, userId);
+    await safeExecute('DELETE FROM questions WHERE question_id = ?', [row.question_id]);
+}
+
 export {
     createQuestionService,
     listQuestionsService,
     getSingleQuestionService,
     getSimilarQuestionsService,
     clampLimit,
+    updateQuestionService,
+    deleteQuestionService
 };
+
+

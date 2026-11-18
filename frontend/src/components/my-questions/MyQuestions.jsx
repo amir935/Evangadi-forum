@@ -88,13 +88,13 @@ function MyQuestions() {
               <div
                 key={q.questionHash}
                 className={styles["question-row-card"]}
-                onClick={() => navigate(`/question/${q.questionHash}`)}
+                onClick={() => navigate(`/questions/${q.questionHash}`)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    navigate(`/question/${q.questionHash}`);
+                    navigate(`/questions/${q.questionHash}`);
                   }
                 }}
               >

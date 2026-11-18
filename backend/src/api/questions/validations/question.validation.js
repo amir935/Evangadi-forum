@@ -77,3 +77,16 @@ export const similarQuestionsValidation = [
   query('threshold').optional().isFloat({ min: 0, max: 1 }).withMessage('threshold must be between 0 and 1'),
   validationErrorHandler,
 ];
+
+export const updateQuestionValidation = [
+  param('questionHash')
+    .isString()
+    .withMessage('Question hash must be a string')
+    .bail()
+    .trim()
+    .matches(/^[a-f0-9]{16}$/)
+    .withMessage('Question hash must be a 16-character hexadecimal string'),
+  body('title').isString().trim().isLength({ min: 5, max: 255 }).withMessage('Title must be 5-255 characters'),
+  body('body').isString().trim().isLength({ min: 10 }).withMessage('Details must be at least 10 characters'),
+  validationErrorHandler,
+];
