@@ -14,3 +14,41 @@ export async function createQuestion({ title, content }) {
     throw new Error(message);
   }
 }
+
+export async function getSingleQuestion(questionHash) {
+  try {
+    const response = await apiClient.get(`/api/questions/${questionHash}`);
+    return response.data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.msg ||
+      'Failed to load question details.';
+    throw new Error(message);
+  }
+}
+
+export async function assessAnswerFit(questionHash, answerText) {
+  try {
+    const response = await apiClient.post(`/api/questions/${questionHash}/answer-fit`, {
+      answerText,
+    });
+    return response.data.data;
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.msg ||
+      'Failed to assess answer fit.';
+    throw new Error(message);
+  }
+}
+
+export async function getSimilarQuestions(questionHash) {
+  try {
+    const response = await apiClient.get(`/api/questions/${questionHash}/similar`);
+    return response.data.data || [];
+  } catch {
+    return [];
+  }
+}
+

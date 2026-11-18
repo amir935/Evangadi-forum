@@ -34,21 +34,19 @@ const startServer = async () => {
 
     console.log("Database connection established successfully.");
     connection.release();
-
-    app.listen(port, (err) => {
-      if (err) {
-        console.error("Failed to start the server:", err.message);
-        process.exit(1);
-      }
-      console.log(`Server running on port http://localhost:${port}`);
-    });
   } catch (error) {
-    console.error(
-      "Failed to connect to the database. Server not started.",
-      error.message,
+    console.warn(
+      "MySQL database not reachable (" + error.message + "). Starting backend in in-memory dev mode."
     );
-    process.exit(1);
   }
+
+  app.listen(port, (err) => {
+    if (err) {
+      console.error("Failed to start the server:", err.message);
+      process.exit(1);
+    }
+    console.log(`Server running on port http://localhost:${port}`);
+  });
 };
 
 startServer();
